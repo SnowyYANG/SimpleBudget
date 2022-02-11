@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="utf-8">
+        <title>Simple Budget</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    </head>
+    <body>
+        <div id="app">
+            <div>
+                支出：<br>
+                <table>
+                    <template v-for="ex in expense">
+                        <tr v-for="(e,index) in ex.items">
+                            <td v-if="index==0" :rowspan="ex.items.length">
+                                <input v-model="ex.name"> <button type="button" @click="AddExpenseItem(ex)">+</button>
+                            </td>
+                            <td><input v-model="e.name"></td>
+                            <td><input type="number" v-model.number="e.money"></td>
+                            <td><input type="date" v-model="e.deadline"></td>
+                            <td><button @click="RemoveExpenseItem(ex,index)">x</button></td>
+                        </tr>
+                    </template>
+                    <tr><td><button type="button" @click="AddExpenseCategory">+</button></td></tr>
+                </table>
+            </div>
+            <div>
+                收入：<br>
+                <table>
+                    <tr v-for="(ic,index) in income">
+                        <td><input type="date" v-model="ic.time"></td>
+                        <td><input v-model="ic.name"></td>
+                        <td><input type="number" v-model="ic.money"></td>
+                        <td><button @click="RemoveIncome(index)">x</button></td>
+                    </tr>
+                    <tr><td><button @click="AddIncome">+</button></td></tr>
+                </table>
+            </div>
+            <div>
+                总结：从<input type="date" v-model="sfrom">到<input type="date" v-model="sto"> <button type="button" @click="ViewSummary">查看</button>
+                <div>{{summary}}</div>
+            </div>
+        </div>
+        <script>
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    income:[
+                        {time:'2022-02-01',name:'工资',money:5000}
+                    ],
+                    expense:[
+                        {name:'衣',items:[{name:'白色衬衫',money:100,deadline:'2022-02-11'},{name:'黑色衬衫',money:200,deadline:'2022-02-11'}]},
+                        {name:'住',items:[{name:'房租',money:1000,deadline:'2022-03-01'}]}
+                    ],
+                    sfrom:'2022-01-01',
+                    sto:'2022-12-31',
+                    summary:''
+                },
+                methods:{
+                    AddExpenseItem: function(ex) {
+                        ex.items.push({name:'',money:0,deadline:'2022-03-11'});
+                    },
+                    AddExpenseCategory: function() {
+                        this.expense.push({name:'',items:[{name:'',money:0,deadline:'2022-03-11'}]});
+                    },
+                    AddIncome: function() {
+                        this.income.push({time:'2022-02-11',name:'',money:0});  
+                    },
+                    RemoveExpenseItem: function(ex,index) {
+                        if (ex.items.length == 1) {
+                            this.expense.splice(this.expense.indexOf(ex),1);
+                        }
+                        else {
+                            ex.items.splice(index,1);
+                        }
+                    },
+                    RemoveIncome: function(index) {
+                        this.income.splice(index,1);
+                    },
+                    ViewSummary: function() {
+                        var sincome=0;
+                        for(i of this.income) 
+                            if (this.sfrom<=i.time&&i.time<=this.sto) sincome+=i.money;
+                        var sexpense=0;
+                        for(ex of this.expense)
+                            for(e of ex.items)
+                                if (this.sfrom<=e.deadline&&e.deadline<=this.sto) sexpense+=e.money
+                        this.summary = '总支出：'+sincome+" 总收入："+sexpense+" 盈余："+(sincome-sexpense);
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>
