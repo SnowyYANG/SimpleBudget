@@ -5,7 +5,7 @@ A simple budget (money plan) tool.
 ## Features
 1. Offline use
 2. Enter expected or actual income and expenses
-     1. Classification of income support (companies by project, individuals by clothing, food, housing, transportation, etc.)
+     1. Classification of income (companies by project, individuals by clothing, food, housing, transportation, etc.)
 4. It can display the income and expense statistics in a period of time
 
 ## 功能
