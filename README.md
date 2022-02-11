@@ -1,5 +1,5 @@
 # SimpleBudget
-A simple budget (money plan) tool.
+A simple budget (money plan) tool.  
 记账、预算小工具。
 
 ## 功能
